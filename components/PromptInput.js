@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SparklesIcon } from '@heroicons/react/24/outline';
 import styles from './PromptInput.module.css';
 
-const PromptInput = ({ onSubmit, isLoading }) => {
+const PromptInput = ({ onSubmit, isLoading, minimized }) => {
   const [prompt, setPrompt] = useState('');
 
   const handleSubmit = (e) => {
@@ -17,14 +17,14 @@ const PromptInput = ({ onSubmit, isLoading }) => {
   const isDisabled = isLoading || prompt.trim().length < 10;
 
   return (
-    <form onSubmit={handleSubmit} className={styles.promptForm}>
-      <div className={styles.inputWrapper}>
+    <form onSubmit={handleSubmit} className={`${styles.promptForm} ${minimized ? styles.promptFormMinimized : ''}`}>
+      <div className={`${styles.inputWrapper} ${minimized ? styles.inputWrapperMinimized : ''}`}>
         <input
           type="text"
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="e.g., Hanuman lifts the mountain..."
-          className={styles.promptInput}
+          className={`${styles.promptInput} ${minimized ? styles.promptInputMinimized : ''}`}
           disabled={isLoading}
           minLength={10}
           required
@@ -32,7 +32,7 @@ const PromptInput = ({ onSubmit, isLoading }) => {
         <button
           type="submit"
           disabled={isDisabled}
-          className={`${styles.submitButton} ${isDisabled ? styles.submitButtonDisabled : styles.submitButtonEnabled}`}
+          className={`${styles.submitButton} ${isDisabled ? styles.submitButtonDisabled : styles.submitButtonEnabled} ${minimized ? styles.submitButtonMinimized : ''}`}
         >
           {isLoading ? (
             <svg className={styles.spinner} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -47,7 +47,7 @@ const PromptInput = ({ onSubmit, isLoading }) => {
           )}
         </button>
       </div>
-      <p className={styles.helperText}>
+      <p className={`${styles.helperText} ${minimized ? styles.helperTextMinimized : ''}`}>
         Enter a theme or scene (min. 10 characters). Example: "Krishna plays the flute by the Yamuna river."
       </p>
     </form>

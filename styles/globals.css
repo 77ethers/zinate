@@ -7,26 +7,40 @@ body {
 }
 
 body {
-  background-color: #0f172a; /* Slightly deeper blue base */
+  background-color: #1e293b; /* Deep blue base reminiscent of pre-dawn sky */
   color: #ffffff;
   min-height: 100vh;
-  background-image: conic-gradient(from 90deg at 50% 120%, #172554, #4338ca, #7e22ce, #86198f, #172554);
-  animation: hue-rotate 15s infinite linear; /* Slowed down for a more gentle effect */
+  background-image: linear-gradient(to bottom, #1e293b, #312e81, #4f46e5, #7c3aed, #c084fc); /* Fixed gradient from deep blue to soft purple */
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Iridescent overlay for the entire page */
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(125deg, rgba(255,255,255,0.05) 0%, rgba(251,113,133,0.05) 25%, rgba(244,63,94,0.05) 50%, rgba(251,113,133,0.05) 75%, rgba(255,255,255,0.05) 100%);
+  background-size: 400% 400%;
+  animation: iridescent-shift 15s ease infinite;
+  pointer-events: none; /* Allow clicks to pass through */
+  z-index: 1;
+}
+
+@keyframes iridescent-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 * {
   box-sizing: border-box;
 }
 
-@keyframes hue-rotate {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    filter: hue-rotate(360deg);
-  }
-}
+/* Removed hue-rotate animation in favor of fixed colors */
 
 /* For the scrollbar (optional, but enhances aesthetics) */
 ::-webkit-scrollbar {

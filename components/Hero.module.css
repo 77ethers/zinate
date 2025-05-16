@@ -5,9 +5,13 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 1.5rem; /* p-6 */
-  min-height: 300px;
+  padding: 1.5rem 1rem;
+  height: 28vh; /* Fixed proportion of viewport height */
+  min-height: 220px; /* Minimum height on smaller screens */
+  max-height: 300px; /* Maximum height on larger screens */
   overflow: hidden;
+  z-index: 2; /* Position above the global iridescent overlay */
+  transition: height 0.5s ease-in-out, padding 0.5s ease-in-out, min-height 0.5s ease-in-out;
 }
 
 .iridescentBg {
@@ -17,8 +21,36 @@
   bottom: 0;
   left: 0;
   z-index: 0;
-  /* 'animate-hue-rotate' is global and will be applied if body has it or if we add it here */
-  /* animation: hue-rotate 10s infinite linear; -- Assuming global animation applies */
+  overflow: hidden;
+}
+
+/* Iridescent effect with moving light reflections */
+.iridescentBg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.03) 30%, 
+    rgba(255,255,255,0.08) 40%, 
+    rgba(251,113,133,0.1) 50%, 
+    rgba(255,255,255,0.08) 60%, 
+    rgba(255,255,255,0.03) 70%, 
+    rgba(255,255,255,0) 100%);
+  transform: rotate(30deg);
+  animation: shine 10s ease-in-out infinite alternate;
+}
+
+@keyframes shine {
+  0% {
+    transform: rotate(30deg) translate(-30%, -30%);
+  }
+  100% {
+    transform: rotate(30deg) translate(30%, 30%);
+  }
 }
 
 .gradientOverlay {
@@ -27,40 +59,80 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background-image: linear-gradient(to bottom right, #c084fc, #8b5cf6, #60a5fa); /* Softer purple to violet to blue */
-  opacity: 0.4; /* Slightly increased opacity for better visibility */
+  background-image: linear-gradient(to bottom right, #fda4af, #fb7185, #f43f5e); /* Soft pink to rose gradient like sunrise */
+  opacity: 0.35; /* Subtle overlay */
 }
 
 .glassmorphismBox {
   position: relative;
   z-index: 10;
-  background-color: rgba(255, 255, 255, 0.12); /* Slightly more visible */
-  backdrop-filter: blur(12px); /* Increased blur for softer effect */
-  padding: 2rem; /* p-8 */
-  border-radius: 1.5rem; /* Slightly more rounded */
-  border: 1px solid rgba(255, 255, 255, 0.25); /* More visible border */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 20px rgba(148, 163, 184, 0.1); /* Softer shadow with subtle glow */
-  max-width: 42rem; /* max-w-2xl */
-  width: 100%;
+  background-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  padding: 1.75rem 2rem; /* Adjusted padding for better vertical space */
+  border-radius: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.2), 
+    0 0 20px rgba(251, 113, 133, 0.15),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  max-width: 42rem;
+  width: calc(100% - 2rem); /* Account for margins */
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: padding 0.5s ease-in-out, background-color 0.5s ease-in-out, backdrop-filter 0.5s ease-in-out, border-radius 0.5s ease-in-out;
+}
+
+/* Iridescent edge effect */
+.glassmorphismBox::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(251, 113, 133, 0.3), 
+    rgba(255, 255, 255, 0.1), 
+    rgba(244, 63, 94, 0.3), 
+    rgba(255, 255, 255, 0.1));
+  background-size: 400% 400%;
+  z-index: -1;
+  border-radius: 1.7rem; /* Slightly larger than the container */
+  animation: border-shift 8s ease infinite;
+  opacity: 0.5;
+}
+
+@keyframes border-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .title {
-  font-size: 2.25rem; /* text-4xl */
-  line-height: 2.5rem;
-  font-weight: 700; /* font-bold */
-  margin-bottom: 1rem; /* mb-4 */
+  font-size: min(2.25rem, 8vw); /* Responsive font size */
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em; /* Tighter letter spacing for headings */
+  transition: font-size 0.5s ease-in-out, margin-bottom 0.5s ease-in-out;
 }
 
 .titleQuest {
-  color: #a78bfa; /* Softer violet color that complements the background */
-  text-shadow: 0 0 15px rgba(167, 139, 250, 0.5); /* Subtle glow effect */
+  color: #fb7185; /* Warm rose color like early sunrise */
+  text-shadow: 0 0 15px rgba(251, 113, 133, 0.5); /* Subtle warm glow effect */
 }
 
 .subtitle {
-  font-size: 1.125rem; /* text-lg */
-  line-height: 1.75rem;
-  color: #e5e7eb; /* text-gray-200 */
-  margin-bottom: 1.5rem; /* mb-6 */
+  font-size: min(1.125rem, 4.5vw); /* Responsive font size */
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  max-width: 36rem;
+  opacity: 0.9; /* Slightly reduce opacity for visual hierarchy */
+  transition: font-size 0.5s ease-in-out, opacity 0.5s ease-in-out, max-height 0.5s ease-in-out, margin-bottom 0.5s ease-in-out;
+  max-height: 100px; /* Initial max-height for transition */
 }
 
 .radialMask {
@@ -70,7 +142,7 @@
   bottom: 0;
   left: 0;
   z-index: 0;
-  background: radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.7) 60%, rgb(15, 23, 42) 85%); /* Softer vignette effect */
+  background: radial-gradient(circle at center, transparent 0%, rgba(30, 41, 59, 0.7) 60%, rgb(30, 41, 59) 85%); /* Vignette effect with sunrise blue */
 }
 
 /* Responsive adjustments */
@@ -96,4 +168,46 @@
     font-size: 3.75rem; /* lg:text-6xl */
     line-height: 1;
   }
+}
+
+/* Minimized States */
+.heroContainerMinimized {
+  height: auto; /* Adjust to content */
+  min-height: 60px; /* Significantly reduced min-height */
+  padding: 0.5rem 1rem;
+  background-color: rgba(30, 41, 59, 0.7); /* Darker, less transparent */
+  backdrop-filter: blur(8px); /* Less blur */
+}
+
+.glassmorphismBoxMinimized {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem; /* Smaller radius */
+  background-color: transparent; /* No distinct background for the box itself */
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+  width: auto; /* Allow it to shrink to content */
+  max-width: 100%;
+  flex-direction: row; /* Align title and quest side-by-side */
+  align-items: center;
+}
+
+.titleMinimized {
+  font-size: clamp(1.25rem, 5vw, 1.5rem); /* Smaller title */
+  margin-bottom: 0; /* No margin below title */
+  margin-right: 0.5rem; /* Space between title and quest (if quest is a separate element) */
+}
+
+.subtitleMinimized {
+  font-size: 0.875rem;
+  opacity: 0; /* Hide subtitle */
+  max-height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+}
+
+.radialMaskMinimized {
+  background: radial-gradient(circle at center, transparent 0%, rgba(30, 41, 59, 0.5) 30%, rgba(30, 41, 59, 0.9) 70%);
+  opacity: 0.7; /* Less prominent in minimized state */
+  transition: background 0.5s ease-in-out, opacity 0.5s ease-in-out;
 }

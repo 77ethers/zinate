@@ -1,24 +1,44 @@
 .container {
+  min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding-top: 0.5rem; /* py-2 */
-  padding-bottom: 0.5rem; /* py-2 */
-  position: relative;
   overflow-x: hidden;
+  position: relative; /* Positioning context for absolute elements */
+  padding-top: 0; /* Initial padding, will be adjusted when header is minimized */
+  transition: padding-top 0.5s ease-in-out;
+}
+
+.containerWithMinimizedHeader {
+  padding-top: 60px; /* Should match the minimized header height */
 }
 
 .header {
   width: 100%;
+  position: fixed; /* Make header sticky */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* High z-index to stay on top */
+  height: auto;
+  flex-shrink: 0; /* Prevent header from shrinking */
+  background-color: transparent; /* Default transparent */
+  transition: all 0.5s ease-in-out;
+  padding-top: 1rem; /* Initial padding */
+  transform: translateY(0); /* Initial position */
 }
 
 .promptInputWrapper {
-  margin-top: -2rem; /* -mt-8 (assuming 1rem = 4 units in Tailwind, so 8 units = 2rem) */
+  margin-top: -2.5rem; /* Increased negative margin to overlap more with hero */
   position: relative;
   z-index: 20;
-  padding-left: 1rem; /* px-4 */
-  padding-right: 1rem; /* px-4 */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: 100%;
+  max-width: 42rem; /* Match the max-width of the glassmorphism box */
+  margin-left: auto;
+  margin-right: auto;
+  transition: margin-top 0.5s ease-in-out, max-width 0.5s ease-in-out, padding-bottom 0.5s ease-in-out;
+  padding-bottom: 1rem; /* Initial padding */
 }
 
 .mainContent {
@@ -27,34 +47,41 @@
   align-items: center;
   width: 100%;
   flex: 1;
-  padding-left: 1rem; /* px-4 */
-  padding-right: 1rem; /* px-4 */
+  padding: 0;
   text-align: center;
-  margin-top: 2rem; /* mt-8 */
+  margin-top: 0;
+  height: auto; /* Let it be defined by content */
+  min-height: calc(100vh - 60px); /* Adjusted for minimized header */
+  padding-top: 300px; /* Space for header and hero */
+  overflow-x: hidden;
+  overflow-y: visible; /* Important - allow content to be visible */
+  position: relative;
+  transition: padding-top 0.5s ease-in-out;
+  z-index: 2; /* Make sure content is above background elements */
 }
 
 .initialMessageContainer {
   text-align: center;
-  padding-top: 3rem; /* Increased padding */
+  padding-top: 3rem;
   padding-bottom: 3rem;
-  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.05) 0%, transparent 70%); /* Subtle violet glow */
+  background: radial-gradient(circle at center, rgba(251, 113, 133, 0.05) 0%, transparent 70%); /* Subtle rose glow */
   border-radius: 1.5rem;
   margin: 1rem 0;
 }
 
 .initialMessageText {
-  font-size: 1.5rem; /* Larger text */
+  font-size: 1.5rem;
   line-height: 2rem;
-  color: #e2e8f0; /* Slightly warmer white */
-  text-shadow: 0 0 15px rgba(139, 92, 246, 0.3); /* Subtle violet glow */
+  color: #fef2f2; /* Warm white with slight pink tint */
+  text-shadow: 0 0 15px rgba(251, 113, 133, 0.3); /* Subtle rose glow */
   font-weight: 500;
 }
 
 .initialMessageExample {
-  font-size: 1.125rem; /* Slightly larger */
+  font-size: 1.125rem;
   line-height: 1.75rem;
-  color: #a78bfa; /* Violet color to match our theme */
-  margin-top: 1rem; /* More spacing */
+  color: #fda4af; /* Soft pink color to match our sunrise theme */
+  margin-top: 1rem;
   font-style: italic;
   opacity: 0.9;
 }
@@ -62,11 +89,14 @@
 .footer {
   width: 100%;
   text-align: center;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-  border-top: 1px solid rgba(139, 92, 246, 0.2); /* Violet border to match theme */
-  margin-top: 4rem; /* More spacing */
-  background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 0.5)); /* Subtle gradient */
+  padding: 0.75rem 0;
+  border-top: 1px solid rgba(251, 113, 133, 0.2);
+  margin-top: 0;
+  background: linear-gradient(to bottom, transparent, rgba(30, 41, 59, 0.5));
+  position: relative;
+  z-index: 10;
+  flex-shrink: 0; /* Prevent footer from shrinking */
+  height: auto;
 }
 
 .footerText {
@@ -81,4 +111,65 @@
     padding-left: 5rem; /* md:px-20 */
     padding-right: 5rem; /* md:px-20 */
   }
+}
+
+/* Styles for Minimized Header */
+.headerMinimized {
+  background-color: rgba(30, 41, 59, 0.85); /* Darker, semi-transparent background */
+  backdrop-filter: blur(10px);
+  padding-top: 0.5rem; /* Reduced padding */
+  padding-bottom: 0.5rem; /* Add bottom padding */
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  height: 60px; /* Fixed minimized height */
+  overflow: hidden; /* Hide overflow content */
+  display: flex;
+  align-items: center;
+}
+
+.headerMinimized .promptInputWrapper {
+  margin-top: 0; /* Remove negative margin */
+  max-width: 100%; /* Allow it to take more space if needed, or adjust as per design */
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 0.5rem; /* Reduced padding */
+}
+
+/* Adjust main content padding when header is minimized */
+.headerMinimized + .mainContent,
+.containerWithMinimizedHeader .mainContent {
+  padding-top: 80px; /* Reduced padding when header is minimized */
+  margin-top: 0;
+}
+
+/* Footer Loading Indicator Styles */
+.footerLoadingIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+  width: 100%;
+  position: absolute;
+  bottom: 40px; /* Adjust to be above footer text if footer has fixed height, or manage with flex order */
+  left: 0;
+}
+
+.footerLoadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 0.5rem;
+}
+
+.footerLoadingMessage {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  animation: blink 1.5s infinite ease-in-out;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 0.3; }
 }

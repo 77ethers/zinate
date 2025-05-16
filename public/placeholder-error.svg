@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- Background with gradient -->
+  <rect width="1024" height="1024" fill="url(#bg-gradient)" />
+  
+  <!-- Gradient definition -->
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e293b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#312e81;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- Error icon gradient -->
+    <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f43f5e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fb7185;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Circle with exclamation mark -->
+  <circle cx="512" cy="412" r="150" fill="none" stroke="url(#icon-gradient)" stroke-width="20" />
+  <rect x="502" y="312" width="20" height="100" rx="10" fill="url(#icon-gradient)" />
+  <circle cx="512" cy="462" r="15" fill="url(#icon-gradient)" />
+  
+  <!-- Text -->
+  <text x="512" y="612" font-family="Arial, sans-serif" font-size="48" text-anchor="middle" fill="#ffffff">
+    Image Generation Failed
+  </text>
+  <text x="512" y="672" font-family="Arial, sans-serif" font-size="32" text-anchor="middle" fill="rgba(255,255,255,0.7)">
+    Please try again with a different prompt
+  </text>
+</svg>

@@ -1,36 +1,82 @@
-.promptForm {
+.formContainer {
   width: 100%;
-  max-width: 32rem; /* max-w-lg */
+  max-width: 36rem;
   margin-left: auto;
   margin-right: auto;
+  position: relative;
+  z-index: 5;
   margin-top: 1.5rem; /* mt-6 */
+  transition: margin-top 0.5s ease-in-out, max-width 0.5s ease-in-out;
 }
 
 .inputWrapper {
   display: flex;
   align-items: center;
   background-color: rgba(255, 255, 255, 0.08); /* Slightly more visible */
-  backdrop-filter: blur(10px); /* Increased blur for softer effect */
+  backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.15); /* More visible border */
-  border-radius: 1rem; /* More rounded corners */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 15px rgba(148, 163, 184, 0.1); /* Added subtle glow */
-  padding: 0.5rem;
+  border-radius: 1.25rem; /* More rounded for better visual appeal */
+  box-shadow: 
+    0 10px 20px -3px rgba(0, 0, 0, 0.15), 
+    0 4px 6px -2px rgba(0, 0, 0, 0.05), 
+    0 0 20px rgba(251, 113, 133, 0.15); /* Enhanced glow */
+  padding: 0.5rem 0.75rem 0.5rem 1.25rem; /* More padding on left for text */
   transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+  z-index: 5;
+  height: 3.5rem; /* Fixed height for consistency */
+  transition: all 0.3s ease-in-out, height 0.5s ease-in-out;
+}
+
+/* Iridescent border effect */
+.inputWrapper::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(251, 113, 133, 0.2), 
+    rgba(255, 255, 255, 0.1), 
+    rgba(244, 63, 94, 0.2), 
+    rgba(255, 255, 255, 0.1));
+  background-size: 300% 300%;
+  z-index: -1;
+  border-radius: 1.2rem; /* Slightly larger than the container */
+  animation: input-border-shift 8s ease infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+@keyframes input-border-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .inputWrapper:focus-within {
-  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.5), 0 0 15px rgba(167, 139, 250, 0.3); /* Softer violet glow */
-  border-color: rgba(167, 139, 250, 0.7);
+  box-shadow: 0 0 0 1px rgba(251, 113, 133, 0.5), 0 0 20px rgba(251, 113, 133, 0.3); /* Warm rose glow */
+  border-color: rgba(251, 113, 133, 0.5);
+}
+
+.inputWrapper:focus-within::before {
+  opacity: 0.6; /* Show the iridescent border when focused */
 }
 
 .promptInput {
-  flex-grow: 1;
+  flex: 1;
   background-color: transparent;
-  color: white;
-  padding: 0.75rem; /* p-3 */
-  font-size: 1.125rem; /* text-lg */
   border: none;
+  color: white;
+  font-size: 1.125rem; /* Slightly larger for better readability */
+  line-height: 1.5rem;
+  padding: 0.5rem 0.5rem 0.5rem 0; /* No left padding since container has it */
   outline: none;
+  font-weight: 400;
+  letter-spacing: 0.01em; /* Slightly improved letter spacing */
+  transition: font-size 0.5s ease-in-out;
 }
 
 .promptInput::placeholder {
@@ -38,31 +84,58 @@
 }
 
 .submitButton {
-  margin-left: 0.5rem; /* ml-2 */
-  padding: 0.75rem 1rem; /* px-4 py-3 */
-  border-radius: 0.5rem; /* rounded-lg */
-  font-weight: 600; /* font-semibold */
-  transition: all 0.3s ease-in-out;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 1rem; /* More rounded to match container */
+  padding: 0.5rem 1.25rem; /* More horizontal padding */
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
   border: none;
   cursor: pointer;
+  min-width: 7rem; /* Slightly wider */
+  height: 2.5rem; /* Fixed height */
+  margin-left: 0.5rem; /* Add some space between input and button */
+  transition: all 0.3s ease-in-out, height 0.5s ease-in-out, padding 0.5s ease-in-out, min-width 0.5s ease-in-out;
 }
 
 .submitButtonEnabled {
-  background-image: linear-gradient(to right, #8b5cf6, #6366f1); /* Violet to indigo gradient */
+  background-image: linear-gradient(to right, #f43f5e, #fb7185); /* Rose to pink gradient like sunrise */
   color: white;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 10px rgba(139, 92, 246, 0.3); /* Added subtle glow */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 10px rgba(244, 63, 94, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Iridescent shimmer effect */
+.submitButtonEnabled::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    rgba(255,255,255,0) 0%, 
+    rgba(255,255,255,0.1) 50%, 
+    rgba(255,255,255,0) 100%);
+  transform: rotate(30deg);
+  animation: button-shine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes button-shine {
+  0% { transform: rotate(30deg) translate(-100%, -100%); }
+  100% { transform: rotate(30deg) translate(100%, 100%); }
 }
 
 .submitButtonEnabled:hover {
-  background-image: linear-gradient(to right, #7c3aed, #4f46e5); /* Deeper violet to indigo on hover */
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 15px rgba(139, 92, 246, 0.4); /* Enhanced glow on hover */
+  background-image: linear-gradient(to right, #e11d48, #f43f5e); /* Deeper rose on hover */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 15px rgba(244, 63, 94, 0.4); /* Enhanced warm glow on hover */
 }
 
 .submitButtonEnabled:focus {
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5), 0 0 15px rgba(139, 92, 246, 0.3); /* Violet focus ring with glow */
+  box-shadow: 0 0 0 2px rgba(244, 63, 94, 0.5), 0 0 15px rgba(244, 63, 94, 0.3); /* Rose focus ring with glow */
   outline: none;
 }
 
@@ -90,6 +163,8 @@
   color: #9ca3af; /* text-gray-400 */
   margin-top: 0.5rem; /* mt-2 */
   text-align: center;
+  transition: opacity 0.3s ease, max-height 0.5s ease-in-out, margin-top 0.5s ease-in-out, font-size 0.5s ease-in-out;
+  max-height: 30px; /* For transition */
 }
 
 @keyframes spin {
@@ -99,4 +174,41 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Minimized Styles */
+.formContainerMinimized {
+  max-width: none; /* Allow to take full width of its parent in minimized header */
+  margin-top: 0;
+}
+
+.inputWrapperMinimized {
+  height: 2.75rem; /* Slightly smaller */
+  padding: 0.25rem 0.5rem 0.25rem 1rem;
+  border-radius: 0.75rem; /* Smaller radius for compact look */
+}
+
+.promptInputMinimized {
+  font-size: 0.9rem; /* Smaller font */
+}
+
+.submitButtonMinimized {
+  height: 2.25rem; /* Smaller button */
+  padding: 0.25rem 0.75rem;
+  min-width: auto; /* Allow button to shrink */
+  font-size: 0.8rem;
+}
+
+.submitButtonMinimized .icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  margin-right: 0.25rem;
+}
+
+.helperTextMinimized {
+  opacity: 0;
+  max-height: 0;
+  margin-top: 0;
+  font-size: 0.6rem;
+  overflow: hidden;
 }

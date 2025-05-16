@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Hero from '../components/Hero';
 import PromptInput from '../components/PromptInput';
-import ZineViewer from '../components/ZineViewer';
+import FullscreenZineViewer from '../components/FullscreenZineViewer';
 import styles from '../styles/Home.module.css'; // Import CSS Modules
 
 const MAX_ITEMS_PER_SESSION = 30; // Soft quota as per doc
@@ -15,6 +15,7 @@ export default function HomePage() {
   const [error, setError] = useState(null);
   const [hasMore, setHasMore] = useState(true); // True if more items can be loaded
   const [page, setPage] = useState(1); // For pagination/tracking loaded sets
+  const [headerMinimized, setHeaderMinimized] = useState(false);
 
   const [lastRequestTime, setLastRequestTime] = useState(0);
   const REQUEST_COOLDOWN_MS = 5000; // 5 seconds
@@ -67,7 +68,9 @@ export default function HomePage() {
     setPage(1);
     setHasMore(true);
     setError(null);
-    setLastRequestTime(0); 
+    setLastRequestTime(0);
+    // Auto-minimize header when creating a new zine
+    setHeaderMinimized(true);
     console.log(`[Debug] handlePromptSubmit: Calling fetchZinePages with newPrompt = "${newPrompt}"`);
     fetchZinePages(newPrompt, true);
   };
@@ -78,18 +81,56 @@ export default function HomePage() {
     }
   };
 
+  // Effect to handle header minimization on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      // Always keep header minimized when loading or when zine items exist
+      if (isLoading || zineItems.length > 0) {
+        setHeaderMinimized(true);
+        return;
+      }
+      
+      // Only in case of no items and not loading, consider scroll position
+      const scrollY = window.scrollY;
+      const threshold = 50; // Lower threshold for better responsiveness
+      
+      if (scrollY > threshold) {
+        setHeaderMinimized(true);
+      } else {
+        setHeaderMinimized(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    // Initial check in case the page loads scrolled or with items already
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [zineItems.length, isLoading]); // Re-run if zineItems or loading state changes
+
+  // Effect to minimize header when images are loading or present
+  useEffect(() => {
+    // If we're loading images or have images, minimize the header
+    if (isLoading || zineItems.length > 0) {
+      setHeaderMinimized(true);
+    }
+    // We don't expand the header here to avoid conflicts with scroll behavior
+  }, [isLoading, zineItems.length]);
+
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${headerMinimized ? styles.containerWithMinimizedHeader : ''}`}>
       <Head>
         <title>ZineQuest - AI Mythic Zines</title>
         <meta name="description" content="Generate endless mythic zines with AI-powered art and captions." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className={styles.header}>
-        <Hero />
+      <header className={`${styles.header} ${headerMinimized ? styles.headerMinimized : ''}`}>
+        <Hero minimized={headerMinimized} />
         <div className={styles.promptInputWrapper}>
-          <PromptInput onSubmit={handlePromptSubmit} isLoading={isLoading && zineItems.length === 0} />
+          <PromptInput onSubmit={handlePromptSubmit} isLoading={isLoading && zineItems.length === 0} minimized={headerMinimized} />
         </div>
       </header>
 
@@ -101,7 +142,7 @@ export default function HomePage() {
           </div>
         )}
 
-        <ZineViewer 
+        <FullscreenZineViewer 
           items={zineItems} 
           onLoadMore={loadMoreItems} 
           isLoading={isLoading}
@@ -111,6 +152,12 @@ export default function HomePage() {
       </main>
 
       <footer className={styles.footer}>
+        {isLoading && zineItems.length > 0 && (
+          <div className={styles.footerLoadingIndicator}>
+            <div className={styles.footerLoadingSpinner}></div>
+            <p className={styles.footerLoadingMessage}>Conjuring more pages...</p>
+          </div>
+        )}
         <p className={styles.footerText}>
           ZineQuest &copy; {new Date().getFullYear()} - An AI Experiment by Windsurf
         </p>

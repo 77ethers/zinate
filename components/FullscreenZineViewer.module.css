@@ -1,0 +1,496 @@
+/* Main container for the fullscreen viewer */
+.fullscreenViewer {
+  width: 100%;
+  position: relative;
+  height: auto; /* Changed from 100% to auto to allow content to be visible */
+  min-height: 80vh; /* Minimum height to ensure adequate space */
+  display: flex;
+  flex-direction: column;
+  z-index: 5; /* Ensure it's above background elements */
+}
+
+/* Container for all pages with snap scrolling */
+.pagesContainer {
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
+  overflow-y: auto; /* Changed back to auto for contained scrolling */
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory; /* Changed to mandatory for strong snapping effect */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth; /* Smooth scrolling between pages */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(251, 113, 133, 0.3) transparent; /* Firefox */
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  padding-top: 1rem; /* Add some padding at the top */
+  padding-bottom: 2rem; /* Add some padding at the bottom */
+}
+
+/* Custom scrollbar for Webkit browsers */
+.pagesContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.pagesContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pagesContainer::-webkit-scrollbar-thumb {
+  background-color: rgba(251, 113, 133, 0.3);
+  border-radius: 20px;
+  border: 2px solid transparent;
+}
+
+/* Individual page wrapper */
+.pageWrapper {
+  height: 100vh; /* Full viewport height for each page */
+  width: 100%;
+  scroll-snap-align: center; /* Center alignment for better viewing */
+  scroll-snap-stop: always; /* Force stopping at each page */
+  margin-bottom: 1vh; /* Small gap between pages */
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Center content within the page */
+}
+
+/* Actual zine page content */
+.zinePage {
+  position: relative;
+  height: auto;
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s ease-in-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: visible;
+  background-color: rgba(30, 41, 59, 0.3);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  padding: 2rem 1rem;
+  margin: 0 auto;
+}
+
+/* Image container to maintain aspect ratio */
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 50vh; /* Reduced height to ensure both image and caption fit in viewport */
+  z-index: 1;
+  overflow: visible;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Fullscreen image */
+.fullscreenImage {
+  max-width: 90%;
+  max-height: 45vh; /* Adjust max height to ensure it fits in the container */
+  object-fit: contain;
+  transition: transform 0.8s cubic-bezier(0.19, 1, 0.22, 1), filter 0.8s ease;
+  will-change: transform, opacity;
+  filter: brightness(0.95);
+  border-radius: 12px; /* Increased rounded corners */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  transform: translateY(0); /* Base position for entrance animations */
+}
+
+/* Enhance image when active */
+.activePage .fullscreenImage {
+  filter: brightness(1.05); /* Slightly brighter when active */
+}
+
+/* Caption container positioned below the image */
+.captionContainer {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  padding: 1.5rem 2rem 2rem;
+  background: linear-gradient(135deg, 
+    rgba(30, 41, 59, 0.8) 0%,
+    rgba(49, 46, 129, 0.8) 100%);
+  backdrop-filter: blur(5px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateY(0);
+  transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform, opacity;
+  border-radius: 12px;
+  margin: 0 auto;
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hide caption when page is not active */
+.zinePage:not(.activePage) .captionContainer {
+  transform: translateY(100px);
+  opacity: 0;
+}
+
+/* Caption text styling */
+.caption {
+  font-size: clamp(1rem, 3vw, 1.25rem); /* Responsive font size */
+  line-height: 1.6;
+  color: #fff;
+  max-width: min(800px, 90vw); /* Responsive max width */
+  text-align: center;
+  margin: 0 auto;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  padding-bottom: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Style caption links */
+.caption :global(a) {
+  color: #fda4af; /* Soft pink */
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.caption :global(a:hover) {
+  color: #fb7185; /* Slightly deeper on hover */
+  text-shadow: 0 0 8px rgba(251, 113, 133, 0.4);
+}
+
+/* Page indicator */
+.pageIndicator {
+  position: absolute;
+  bottom: 1rem;
+  right: 1.5rem;
+  min-width: 3.5rem;
+  height: 2.5rem;
+  border-radius: 1.25rem;
+  background: rgba(251, 113, 133, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: bold;
+  box-shadow: 0 0 15px rgba(251, 113, 133, 0.5);
+  padding: 0 0.75rem;
+}
+
+.pageNumber {
+  font-size: 1.25rem;
+}
+
+.pageDivider {
+  margin: 0 0.25rem;
+  opacity: 0.7;
+}
+
+.totalPages {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Scroll indicator at the bottom */
+.scrollIndicator {
+  position: fixed; /* Fixed position so it's always visible */
+  bottom: 5rem; /* Position above footer */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-size: 0.875rem;
+  opacity: 0;
+  animation: fadeInOut 2s ease-in-out infinite;
+  z-index: 10;
+  pointer-events: none; /* Don't block clicks */
+  transition: opacity 0.5s ease;
+}
+
+/* Only show scroll indicator on the first page */
+.fullscreenViewer:hover .scrollIndicator {
+  opacity: 0.8;
+}
+
+/* Scroll arrow animation */
+.scrollArrow {
+  width: 20px;
+  height: 20px;
+  border-right: 3px solid rgba(255, 255, 255, 0.8);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.8);
+  transform: rotate(45deg);
+  margin-bottom: 0.5rem;
+  animation: scrollBounce 2s infinite;
+}
+
+/* Loading container */
+.loadingContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(30, 41, 59, 0.8);
+  z-index: 20;
+}
+
+/* Loading overlay for when loading more pages */
+.loadingOverlay {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: rgba(30, 41, 59, 0.8);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  z-index: 30;
+  box-shadow: 0 0 20px rgba(251, 113, 133, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Loading spinner */
+.loadingSpinner {
+  display: inline-block;
+  animation: spin 1.2s ease-in-out infinite;
+  border-radius: 50%;
+  height: 3rem;
+  width: 3rem;
+  border-top: 4px solid #f43f5e;
+  border-bottom: 4px solid #fb7185;
+  border-left: 4px solid rgba(244, 63, 94, 0.2);
+  border-right: 4px solid rgba(251, 113, 133, 0.2);
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+  margin-bottom: 1rem;
+}
+
+/* Loading message */
+.loadingMessage {
+  color: white;
+  font-size: 1.125rem;
+}
+
+/* Error container */
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  height: 100%;
+  background-color: rgba(30, 41, 59, 0.8);
+}
+
+/* Error message */
+.errorMessage {
+  color: #fb7185;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(251, 113, 133, 0.2);
+}
+
+/* Error details */
+.errorDetails {
+  color: #e2e8f0;
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+}
+
+/* Retry button */
+.retryButton {
+  padding: 0.75rem 2rem;
+  background-image: linear-gradient(to right, #f43f5e, #fb7185);
+  color: white;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 10px rgba(244, 63, 94, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Message containers */
+.messageContainer, .endMessageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  height: 100%;
+}
+
+/* End message title */
+.endMessageTitle {
+  font-size: 1.75rem;
+  line-height: 2.25rem;
+  font-weight: 600;
+  background-image: linear-gradient(to right, #fb7185, #f43f5e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1rem;
+  text-shadow: 0 5px 15px rgba(244, 63, 94, 0.4);
+}
+
+/* Message text */
+.messageText {
+  color: #e2e8f0;
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Secondary message */
+.secondaryMessage {
+  color: #fda4af;
+  font-size: 1.125rem;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* Animations */
+@keyframes fadeInOut {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.3; }
+}
+
+@keyframes scrollBounce {
+  0% { transform: rotate(45deg) translate(0, 0); }
+  50% { transform: rotate(45deg) translate(5px, 5px); }
+  100% { transform: rotate(45deg) translate(0, 0); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Navigation controls */
+.navigationControls {
+  position: fixed;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1rem;
+  pointer-events: none; /* Allow clicks to pass through the container */
+  z-index: 20;
+}
+
+.navButton {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: auto; /* Make buttons clickable */
+  opacity: 0.7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.navButton:hover {
+  background: rgba(251, 113, 133, 0.3);
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.navButton:active {
+  transform: scale(0.95);
+}
+
+.navDisabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.navDisabled:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: none;
+}
+
+.navArrow {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+/* Media queries for better responsiveness */
+@media (max-width: 768px) {
+  .captionContainer {
+    padding: 1.5rem 1rem;
+  }
+  
+  .caption {
+    font-size: 1rem;
+    padding-bottom: 1.5rem;
+  }
+  
+  .pageIndicator {
+    min-width: 3rem;
+    height: 2rem;
+    font-size: 0.875rem;
+    right: 1rem;
+  }
+  
+  .pageNumber {
+    font-size: 1rem;
+  }
+  
+  .navigationControls {
+    padding: 0 0.5rem;
+  }
+  
+  .navButton {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .captionContainer {
+    padding: 1rem;
+  }
+  
+  .caption {
+    font-size: 0.875rem;
+    padding-bottom: 1rem;
+  }
+  
+  .pageIndicator {
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.875rem;
+  }
+}
