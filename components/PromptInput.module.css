@@ -1,0 +1,102 @@
+.promptForm {
+  width: 100%;
+  max-width: 32rem; /* max-w-lg */
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1.5rem; /* mt-6 */
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.08); /* Slightly more visible */
+  backdrop-filter: blur(10px); /* Increased blur for softer effect */
+  border: 1px solid rgba(255, 255, 255, 0.15); /* More visible border */
+  border-radius: 1rem; /* More rounded corners */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 15px rgba(148, 163, 184, 0.1); /* Added subtle glow */
+  padding: 0.5rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.inputWrapper:focus-within {
+  box-shadow: 0 0 0 2px rgba(167, 139, 250, 0.5), 0 0 15px rgba(167, 139, 250, 0.3); /* Softer violet glow */
+  border-color: rgba(167, 139, 250, 0.7);
+}
+
+.promptInput {
+  flex-grow: 1;
+  background-color: transparent;
+  color: white;
+  padding: 0.75rem; /* p-3 */
+  font-size: 1.125rem; /* text-lg */
+  border: none;
+  outline: none;
+}
+
+.promptInput::placeholder {
+  color: #9ca3af; /* placeholder-gray-400 */
+}
+
+.submitButton {
+  margin-left: 0.5rem; /* ml-2 */
+  padding: 0.75rem 1rem; /* px-4 py-3 */
+  border-radius: 0.5rem; /* rounded-lg */
+  font-weight: 600; /* font-semibold */
+  transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+}
+
+.submitButtonEnabled {
+  background-image: linear-gradient(to right, #8b5cf6, #6366f1); /* Violet to indigo gradient */
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 10px rgba(139, 92, 246, 0.3); /* Added subtle glow */
+}
+
+.submitButtonEnabled:hover {
+  background-image: linear-gradient(to right, #7c3aed, #4f46e5); /* Deeper violet to indigo on hover */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 15px rgba(139, 92, 246, 0.4); /* Enhanced glow on hover */
+}
+
+.submitButtonEnabled:focus {
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5), 0 0 15px rgba(139, 92, 246, 0.3); /* Violet focus ring with glow */
+  outline: none;
+}
+
+.submitButtonDisabled {
+  background-color: rgba(107, 114, 128, 0.3); /* bg-gray-500/30 */
+  color: #9ca3af; /* text-gray-400 */
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  color: white;
+}
+
+.icon {
+  height: 1.25rem; /* h-5 */
+  width: 1.25rem; /* w-5 */
+  margin-right: 0.5rem; /* mr-2 */
+}
+
+.helperText {
+  font-size: 0.75rem; /* text-xs */
+  color: #9ca3af; /* text-gray-400 */
+  margin-top: 0.5rem; /* mt-2 */
+  text-align: center;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

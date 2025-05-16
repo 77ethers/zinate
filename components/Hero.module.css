@@ -1,0 +1,99 @@
+.heroContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem; /* p-6 */
+  min-height: 300px;
+  overflow: hidden;
+}
+
+.iridescentBg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  /* 'animate-hue-rotate' is global and will be applied if body has it or if we add it here */
+  /* animation: hue-rotate 10s infinite linear; -- Assuming global animation applies */
+}
+
+.gradientOverlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: linear-gradient(to bottom right, #c084fc, #8b5cf6, #60a5fa); /* Softer purple to violet to blue */
+  opacity: 0.4; /* Slightly increased opacity for better visibility */
+}
+
+.glassmorphismBox {
+  position: relative;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.12); /* Slightly more visible */
+  backdrop-filter: blur(12px); /* Increased blur for softer effect */
+  padding: 2rem; /* p-8 */
+  border-radius: 1.5rem; /* Slightly more rounded */
+  border: 1px solid rgba(255, 255, 255, 0.25); /* More visible border */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2), 0 0 20px rgba(148, 163, 184, 0.1); /* Softer shadow with subtle glow */
+  max-width: 42rem; /* max-w-2xl */
+  width: 100%;
+}
+
+.title {
+  font-size: 2.25rem; /* text-4xl */
+  line-height: 2.5rem;
+  font-weight: 700; /* font-bold */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.titleQuest {
+  color: #a78bfa; /* Softer violet color that complements the background */
+  text-shadow: 0 0 15px rgba(167, 139, 250, 0.5); /* Subtle glow effect */
+}
+
+.subtitle {
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75rem;
+  color: #e5e7eb; /* text-gray-200 */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.radialMask {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(15, 23, 42, 0.7) 60%, rgb(15, 23, 42) 85%); /* Softer vignette effect */
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) { /* md breakpoint */
+  .heroContainer {
+    min-height: 400px;
+  }
+  .glassmorphismBox {
+    padding: 3rem; /* md:p-12 */
+  }
+  .title {
+    font-size: 3rem; /* md:text-5xl */
+    line-height: 1;
+  }
+  .subtitle {
+    font-size: 1.25rem; /* md:text-xl */
+    line-height: 1.75rem;
+  }
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+  .title {
+    font-size: 3.75rem; /* lg:text-6xl */
+    line-height: 1;
+  }
+}

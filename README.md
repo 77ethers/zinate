@@ -1,0 +1,100 @@
+# ZineQuest - AI Mythic Zine Creator
+
+ZineQuest is a Next.js web application that allows users to generate scroll-triggered, AI-generated mythic zines. It blends vibrant Indian comic art with concise captions, creating an illusion of an endless, living graphic novel based on user prompts.
+
+This project was architected and developed with the assistance of Cascade, an agentic AI coding assistant by Windsurf.
+
+## Features
+
+- **AI-Generated Content**: Leverages OpenAI's GPT-4o-mini for captions and DALL·E 3 for images.
+- **Infinite Scroll**: Dynamically loads new zine pages as the user scrolls.
+- **Responsive Design**: Adapts to mobile and desktop screens.
+- **Aesthetic UI**: Features glassmorphism and iridescent background effects.
+- **Prompt-driven**: Users enter a creative prompt to start their zine.
+- **Rate Limiting**: Basic client-side and server-side rate limiting to manage API usage.
+
+## Tech Stack
+
+- **Frontend**: Next.js, React, Tailwind CSS, Framer Motion
+- **Backend**: Next.js API Routes (Vercel Edge Functions when deployed)
+- **AI**: OpenAI API (GPT-4o-mini, DALL·E 3)
+- **Styling**: Tailwind CSS
+
+## Project Structure
+
+```
+/Users/ekansh/zinate/
+├── components/         # React components (Hero, PromptInput, ZineItem, ZineViewer)
+├── pages/
+│   ├── api/            # API routes (generate.js)
+│   ├── _app.js         # Custom App component
+│   └── index.js        # Main homepage
+├── public/             # Static assets (e.g., favicon)
+├── styles/             # Global styles (globals.css)
+├── .env.example        # Example environment variables
+├── .gitignore          # Git ignore file
+├── next.config.js      # Next.js configuration (if needed, default for now)
+├── package.json        # Project dependencies and scripts
+├── postcss.config.js   # PostCSS configuration
+├── tailwind.config.js  # Tailwind CSS configuration
+└── README.md           # This file
+```
+
+## Setup
+
+1.  **Clone the repository (if applicable) or ensure you have the project files.**
+
+2.  **Navigate to the project directory:**
+    ```bash
+    cd /Users/ekansh/zinate
+    ```
+
+3.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+4.  **Set up environment variables:**
+    Copy the `.env.example` file to a new file named `.env` (or `.env.local`):
+    ```bash
+    cp .env.example .env.local
+    ```
+    Open `.env.local` and add your OpenAI API key:
+    ```env
+    OPENAI_API_KEY="your_openai_api_key_here"
+    ```
+
+## Running the Development Server
+
+Once the setup is complete, you can run the development server:
+
+```bash
+npm run dev
+```
+
+This will start the application, typically on `http://localhost:3000`.
+Open this URL in your browser to see ZineQuest in action.
+
+## Building for Production
+
+To build the application for production:
+
+```bash
+npm run build
+```
+
+To start the production server after building:
+
+```bash
+npm run start
+```
+
+## MVP Checklist from Original Spec
+
+- [x] Landing hero with animations & prompt field.
+- [x] `/api/generate` edge function calling OpenAI.
+- [x] Render first 3 zine pages.
+- [x] Infinite scroll with loading sentinel.
+- [x] Basic error handling + retry button.
+- [x] Mobile & desktop responsive (basic structure set up with Tailwind, needs testing).
+

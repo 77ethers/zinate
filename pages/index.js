@@ -1,0 +1,120 @@
+import Head from 'next/head';
+import React, { useState, useEffect, useCallback } from 'react';
+import Hero from '../components/Hero';
+import PromptInput from '../components/PromptInput';
+import ZineViewer from '../components/ZineViewer';
+import styles from '../styles/Home.module.css'; // Import CSS Modules
+
+const MAX_ITEMS_PER_SESSION = 30; // Soft quota as per doc
+const ITEMS_PER_REQUEST = 3;
+
+export default function HomePage() {
+  const [currentPrompt, setCurrentPrompt] = useState('');
+  const [zineItems, setZineItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasMore, setHasMore] = useState(true); // True if more items can be loaded
+  const [page, setPage] = useState(1); // For pagination/tracking loaded sets
+
+  const [lastRequestTime, setLastRequestTime] = useState(0);
+  const REQUEST_COOLDOWN_MS = 5000; // 5 seconds
+
+  const fetchZinePages = useCallback(async (promptToFetch, isNewPrompt = false) => {
+    console.log(`[Debug] fetchZinePages: Received promptToFetch = "${promptToFetch}", isNewPrompt = ${isNewPrompt}`);
+    if (Date.now() - lastRequestTime < REQUEST_COOLDOWN_MS && !isNewPrompt) {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/generate?prompt=${encodeURIComponent(promptToFetch)}&count=${ITEMS_PER_REQUEST}&page=${isNewPrompt ? 1 : page}`);
+      setLastRequestTime(Date.now());
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
+        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      
+      const newItemsWithIds = data.items.map((item, index) => ({ 
+        ...item, 
+        id: `item-${isNewPrompt ? 0 : zineItems.length}-${index}-${Date.now()}` 
+      }));
+
+      setZineItems(prevItems => isNewPrompt ? newItemsWithIds : [...prevItems, ...newItemsWithIds]);
+      setHasMore(newItemsWithIds.length === ITEMS_PER_REQUEST && (isNewPrompt ? newItemsWithIds.length : zineItems.length + newItemsWithIds.length) < MAX_ITEMS_PER_SESSION);
+      if (isNewPrompt) {
+        setPage(2);
+      } else {
+        setPage(prevPage => prevPage + 1);
+      }
+
+    } catch (err) {
+      console.error("Fetch error:", err);
+      setError(err);
+      setHasMore(false);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [page, zineItems.length, lastRequestTime]);
+
+  const handlePromptSubmit = (newPrompt) => {
+    setCurrentPrompt(newPrompt);
+    setZineItems([]);
+    setPage(1);
+    setHasMore(true);
+    setError(null);
+    setLastRequestTime(0); 
+    console.log(`[Debug] handlePromptSubmit: Calling fetchZinePages with newPrompt = "${newPrompt}"`);
+    fetchZinePages(newPrompt, true);
+  };
+
+  const loadMoreItems = () => {
+    if (!isLoading && hasMore && currentPrompt) {
+      fetchZinePages(currentPrompt, false);
+    }
+  };
+
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>ZineQuest - AI Mythic Zines</title>
+        <meta name="description" content="Generate endless mythic zines with AI-powered art and captions." />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <header className={styles.header}>
+        <Hero />
+        <div className={styles.promptInputWrapper}>
+          <PromptInput onSubmit={handlePromptSubmit} isLoading={isLoading && zineItems.length === 0} />
+        </div>
+      </header>
+
+      <main className={styles.mainContent}>
+        {zineItems.length === 0 && !isLoading && !error && !currentPrompt && (
+          <div className={styles.initialMessageContainer}>
+            <p className={styles.initialMessageText}>Type a theme above to begin your mythic journey!</p>
+            <p className={styles.initialMessageExample}>For example: "Ganesha enjoying a cosmic ladoo feast"</p>
+          </div>
+        )}
+
+        <ZineViewer 
+          items={zineItems} 
+          onLoadMore={loadMoreItems} 
+          isLoading={isLoading}
+          hasMore={hasMore}
+          error={error}
+        />
+      </main>
+
+      <footer className={styles.footer}>
+        <p className={styles.footerText}>
+          ZineQuest &copy; {new Date().getFullYear()} - An AI Experiment by Windsurf
+        </p>
+      </footer>
+    </div>
+  );
+}

@@ -1,0 +1,24 @@
+{
+  "name": "zinate",
+  "version": "1.0.0",
+  "main": "api-example.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@heroicons/react": "^2.2.0",
+    "framer-motion": "^12.12.1",
+    "next": "^15.3.2",
+    "openai": "^4.99.0",
+    "postcss": "^8.5.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}

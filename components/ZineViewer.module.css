@@ -1,0 +1,108 @@
+.viewerContainer {
+  margin-top: 2rem; /* mt-8 */
+  padding-bottom: 3rem; /* pb-12 */
+  width: 100%;
+}
+
+.itemsGrid {
+  display: grid;
+  grid-template-columns: 1fr; /* grid-cols-1 */
+  gap: 2rem; /* gap-8 */
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+}
+
+.stateContainer {
+  text-align: center;
+  padding-top: 2.5rem; /* py-10 or py-16 based on context */
+  padding-bottom: 2.5rem;
+}
+
+.errorMessage {
+  color: #fb7185; /* Softer rose color, less harsh than red */
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(251, 113, 133, 0.2); /* Subtle glow */
+}
+
+.errorDetails, .messageText, .loadingMessage {
+  color: #d1d5db; /* text-gray-300 */
+  font-size: 1.125rem; /* text-lg */
+  line-height: 1.75rem;
+  margin-bottom: 1rem; /* mb-4, or mt-4 for loading */
+}
+
+.secondaryMessage {
+  color: #9ca3af; /* text-gray-400 */
+  margin-top: 0.5rem; /* mt-2 */
+}
+
+.retryButton {
+  padding: 0.5rem 1.5rem;
+  background-image: linear-gradient(to right, #8b5cf6, #6366f1); /* Violet to indigo gradient */
+  color: white;
+  border-radius: 0.75rem; /* More rounded */
+  font-weight: 600;
+  transition: all 0.3s ease-in-out;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 0 10px rgba(139, 92, 246, 0.3); /* Added subtle glow */
+}
+
+.retryButton:hover {
+  background-image: linear-gradient(to right, #7c3aed, #4f46e5); /* Deeper violet to indigo on hover */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 0 15px rgba(139, 92, 246, 0.4); /* Enhanced glow on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.retryButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loadingSpinner {
+  display: inline-block;
+  animation: spin 1.2s ease-in-out infinite; /* Slightly slower, smoother animation */
+  border-radius: 50%;
+  height: 3rem;
+  width: 3rem;
+  border-top: 4px solid #8b5cf6; /* Violet border */
+  border-bottom: 4px solid #6366f1; /* Indigo border for gradient effect */
+  border-left: 4px solid rgba(139, 92, 246, 0.2); /* Semi-transparent violet */
+  border-right: 4px solid rgba(99, 102, 241, 0.2); /* Semi-transparent indigo */
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); /* Subtle glow effect */
+}
+
+.loadingMessage {
+  margin-top: 1rem; /* mt-4 */
+}
+
+.endMessageTitle {
+  font-size: 1.75rem; /* Slightly larger */
+  line-height: 2.25rem;
+  font-weight: 600;
+  background-image: linear-gradient(to right, #a78bfa, #6366f1); /* Violet to indigo gradient */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 5px 15px rgba(139, 92, 246, 0.4); /* Subtle glow effect */
+  letter-spacing: 0.01em; /* Slightly improved letter spacing */
+}
+
+.endMessageContainerLargePadding {
+  padding-top: 4rem; /* py-16 */
+  padding-bottom: 4rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (min-width: 768px) { /* md breakpoint */
+  .itemsGrid {
+    gap: 3rem; /* md:gap-12 */
+  }
+}

@@ -1,0 +1,84 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding-top: 0.5rem; /* py-2 */
+  padding-bottom: 0.5rem; /* py-2 */
+  position: relative;
+  overflow-x: hidden;
+}
+
+.header {
+  width: 100%;
+}
+
+.promptInputWrapper {
+  margin-top: -2rem; /* -mt-8 (assuming 1rem = 4 units in Tailwind, so 8 units = 2rem) */
+  position: relative;
+  z-index: 20;
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+}
+
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  padding-left: 1rem; /* px-4 */
+  padding-right: 1rem; /* px-4 */
+  text-align: center;
+  margin-top: 2rem; /* mt-8 */
+}
+
+.initialMessageContainer {
+  text-align: center;
+  padding-top: 3rem; /* Increased padding */
+  padding-bottom: 3rem;
+  background: radial-gradient(circle at center, rgba(139, 92, 246, 0.05) 0%, transparent 70%); /* Subtle violet glow */
+  border-radius: 1.5rem;
+  margin: 1rem 0;
+}
+
+.initialMessageText {
+  font-size: 1.5rem; /* Larger text */
+  line-height: 2rem;
+  color: #e2e8f0; /* Slightly warmer white */
+  text-shadow: 0 0 15px rgba(139, 92, 246, 0.3); /* Subtle violet glow */
+  font-weight: 500;
+}
+
+.initialMessageExample {
+  font-size: 1.125rem; /* Slightly larger */
+  line-height: 1.75rem;
+  color: #a78bfa; /* Violet color to match our theme */
+  margin-top: 1rem; /* More spacing */
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.footer {
+  width: 100%;
+  text-align: center;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  border-top: 1px solid rgba(139, 92, 246, 0.2); /* Violet border to match theme */
+  margin-top: 4rem; /* More spacing */
+  background: linear-gradient(to bottom, transparent, rgba(15, 23, 42, 0.5)); /* Subtle gradient */
+}
+
+.footerText {
+  color: #9ca3af; /* text-gray-400 */
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem;
+}
+
+/* Responsive adjustments for main content padding */
+@media (min-width: 768px) { /* md breakpoint */
+  .mainContent {
+    padding-left: 5rem; /* md:px-20 */
+    padding-right: 5rem; /* md:px-20 */
+  }
+}
