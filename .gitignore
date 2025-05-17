@@ -22,6 +22,7 @@
 .env
 .env*.local
 !.env.example
+.env.cloudflare
 
 # Misc
 .DS_Store
