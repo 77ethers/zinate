@@ -1,12 +1,8 @@
-import StoryPlannerService from './story-planner';
-import ContentImageGeneratorService from './content-image-generator';
-import ImageGeneratorService from './image-generator';
+import WorkerAdapter from './worker-adapter';
 
 class ZineService {
   constructor() {
-    this.storyPlanner = new StoryPlannerService();
-    this.contentGenerator = new ContentImageGeneratorService();
-    this.imageGenerator = new ImageGeneratorService();
+    this.workerAdapter = new WorkerAdapter();
   }
 
   async generateZine(prompt, progressTracker = null) {
@@ -23,7 +19,7 @@ class ZineService {
       
       // Step 1: Generate a cohesive story plan based on the user prompt
       console.log('[ZineService] Starting story planning process');
-      const storyResult = await this.storyPlanner.generateStory(prompt);
+      const storyResult = await this.workerAdapter.generateStory(prompt);
       
       if (!storyResult.success) {
         return {
@@ -41,7 +37,7 @@ class ZineService {
       
       // Step 2: Generate content and image prompts based on the story plan
       console.log('[ZineService] Generating content and image prompts');
-      const contentResult = await this.contentGenerator.generateContent(storyPlan);
+      const contentResult = await this.workerAdapter.generateContent(storyPlan);
       
       if (!contentResult.success) {
         return {
@@ -71,7 +67,7 @@ class ZineService {
         
         try {
           // Generate image using the image prompt
-          const imageResult = await this.imageGenerator.generateImage(page.imagePrompt);
+          const imageResult = await this.workerAdapter.generateImage(page.imagePrompt);
           
           // Add the generated image and content to the zine pages
           zinePages.push({

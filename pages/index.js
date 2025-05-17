@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import PromptInput from '../components/PromptInput';
 import FullscreenZineViewer from '../components/FullscreenZineViewer';
 import ZineCreationProgress from '../components/ZineCreationProgress';
+import useWorkerServices from '../hooks/useWorkerServices';
 import styles from '../styles/Home.module.css'; // Import CSS Modules
 
 const MAX_ITEMS_PER_SESSION = 30; // Soft quota as per doc
@@ -20,6 +21,9 @@ export default function HomePage() {
   
   // Status tracking for zine creation process
   const [creationStep, setCreationStep] = useState(null); // null, 'planning', 'content', 'generating', 'assembling', 'complete'
+  
+  // Use our new worker services hook
+  const { generateZine, generationProgress, useDirectWorker, isGenerating } = useWorkerServices();
 
   const [lastRequestTime, setLastRequestTime] = useState(0);
   const REQUEST_COOLDOWN_MS = 5000; // 5 seconds
@@ -39,35 +43,30 @@ export default function HomePage() {
     }
 
     try {
-      // Setup for server-sent events to get progress updates
-      const eventSource = new EventSource(`/api/progress?id=${encodeURIComponent(promptToFetch)}`);
+      console.log(`[Debug] Starting zine generation with useDirectWorker=${useDirectWorker}`);
       
-      eventSource.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.step) {
-          setCreationStep(data.step);
-        }
-      };
+      // Use our worker services to generate the zine
+      // This will automatically use Cloudflare Workers directly if enabled,
+      // or fall back to the Next.js API
+      const data = await generateZine(promptToFetch);
       
-      eventSource.onerror = () => {
-        // Close the event source on error
-        eventSource.close();
-      };
+      console.log('[Debug] Received zine data:', {
+        success: data.success,
+        error: data.error,
+        itemsCount: data.items ? data.items.length : 0,
+        title: data.title
+      });
       
-      // Make the actual API call to generate the zine
-      const response = await fetch(`/api/generate?prompt=${encodeURIComponent(promptToFetch)}&count=${ITEMS_PER_REQUEST}&page=${isNewPrompt ? 1 : page}`);
-      
-      // Close the event source when the response is received
-      eventSource.close();
+      // Update our creation step based on the worker progress
+      if (generationProgress.step) {
+        setCreationStep(generationProgress.step);
+      }
       
       setLastRequestTime(Date.now());
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
-        throw new Error(errorData.message || `HTTP error! Status: ${response.status}`);
+      if (!data.success && data.error) {
+        throw new Error(data.error || 'Failed to generate zine');
       }
-
-      const data = await response.json();
       
       // Set creation step to complete when data is received
       setCreationStep('complete');
@@ -94,7 +93,7 @@ export default function HomePage() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, zineItems.length, lastRequestTime]);
+  }, [page, zineItems.length, lastRequestTime, generateZine, generationProgress]);
 
   const handlePromptSubmit = (newPrompt) => {
     setCurrentPrompt(newPrompt);

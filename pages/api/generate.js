@@ -1,4 +1,5 @@
 import ZineService from '../../services/zine-service';
+import WorkerAdapter from '../../services/worker-adapter';
 
 // Basic in-memory store for rate limiting (per Vercel instance)
 const requestTimestamps = {};
@@ -6,8 +7,15 @@ const RATE_LIMIT_WINDOW_MS = 60000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 10; // Max 10 requests per IP per minute (simplified)
 const MIN_REQUEST_INTERVAL_MS = 5000; // Minimum 5 seconds between requests from the same IP (simplified)
 
+// Whether to use Cloudflare Workers directly or the Next.js API route
+const USE_DIRECT_WORKER = process.env.NEXT_PUBLIC_USE_DIRECT_WORKER === 'true';
+
 // Initialize the zine service which coordinates all the component services
 const zineService = new ZineService();
+
+// Create a worker adapter instance for direct worker calls if enabled
+const workerAdapter = new WorkerAdapter();
+workerAdapter.useWorkers = true; // Always use workers in API routes
 
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
@@ -61,8 +69,11 @@ export default async function handler(req, res) {
             global.zineProgress.set(progressId, { step, updated: Date.now() });
         };
         
-        // Use our zine service to handle the entire generation process with progress tracking
-        const result = await zineService.generateZine(prompt.trim(), progressTracker);
+        // Decide whether to use the direct worker adapter or go through the zine service
+        // Direct worker is faster since it skips the local service coordination
+        const result = USE_DIRECT_WORKER
+            ? await workerAdapter.generateZine(prompt.trim(), progressTracker)
+            : await zineService.generateZine(prompt.trim(), progressTracker);
         
         if (!result.success) {
             console.error(`[API] Zine generation failed at stage ${result.stage}:`, result.error);

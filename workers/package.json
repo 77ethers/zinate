@@ -1,0 +1,20 @@
+{
+  "name": "zinate-workers",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers for Zinate mythic zine generator",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "deploy:all": "npm run deploy:story && npm run deploy:content && npm run deploy:image && npm run deploy:zine",
+    "deploy:story": "wrangler deploy -e story_planner story-planner-worker.js",
+    "deploy:content": "wrangler deploy -e content_generator content-generator-worker.js",
+    "deploy:image": "wrangler deploy -e image_generator image-generator-worker.js",
+    "deploy:zine": "wrangler deploy -e zine zine-worker.js"
+  },
+  "dependencies": {
+    "@runware/sdk-js": "^1.0.0",
+    "openai": "^4.0.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.2.0"
+  }
+}

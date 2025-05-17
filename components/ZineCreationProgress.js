@@ -4,17 +4,29 @@ import styles from './ZineCreationProgress.module.css';
 const ZineCreationProgress = ({ currentStep, error }) => {
   // Define all the possible steps in the zine creation process
   const steps = [
-    { id: 'planning', label: 'Crafting your mythic story...' },
-    { id: 'content', label: 'Creating vivid scenes and descriptions...' },
-    { id: 'generating', label: 'Bringing your story to life with images...' },
-    { id: 'assembling', label: 'Assembling your zine...' },
-    { id: 'complete', label: 'Your mythic zine is ready!' }
+    { id: 'planning', label: 'Crafting your mythic story...', alternateIds: ['story-planning'] },
+    { id: 'content', label: 'Creating vivid scenes and descriptions...', alternateIds: ['content-generation'] },
+    { id: 'generating', label: 'Bringing your story to life with images...', alternateIds: ['image-generation'] },
+    { id: 'assembling', label: 'Assembling your zine...', alternateIds: [] },
+    { id: 'complete', label: 'Your mythic zine is ready!', alternateIds: [] }
   ];
 
   // Determine which steps have been completed
   const getStepStatus = (stepId) => {
+    // Find step index in the steps array
     const stepIndex = steps.findIndex(step => step.id === stepId);
-    const currentIndex = steps.findIndex(step => step.id === currentStep);
+    
+    // Map the current step to a canonical step if it's an alternate ID
+    let canonicalCurrentStep = currentStep;
+    for (const step of steps) {
+      if (step.alternateIds && step.alternateIds.includes(currentStep)) {
+        canonicalCurrentStep = step.id;
+        break;
+      }
+    }
+    
+    // Find the index of the canonical current step
+    const currentIndex = steps.findIndex(step => step.id === canonicalCurrentStep);
     
     if (error) return 'error';
     if (stepIndex < currentIndex) return 'complete';

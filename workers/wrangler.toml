@@ -1,0 +1,39 @@
+# Base configuration for all workers
+account_id = "5da50c23999a6931d14015e4e37ee633"
+
+# Story Planner Worker
+[env.story_planner]
+name = "zinate-story-planner"
+usage_model = "bundled"
+workers_dev = true
+compatibility_date = "2023-05-18"
+
+# Secrets will be stored in Cloudflare Workers secrets instead of here
+# Run the deploy.sh script to set up secrets automatically
+
+# Content Generator Worker
+[env.content_generator]
+name = "zinate-content-generator"
+usage_model = "bundled"
+workers_dev = true
+compatibility_date = "2023-05-18"
+
+# Secrets will be stored in Cloudflare Workers secrets
+
+# Image Generator Worker
+[env.image_generator]
+name = "zinate-image-generator"
+usage_model = "bundled"
+workers_dev = true
+compatibility_date = "2023-05-18"
+
+# Secrets will be stored in Cloudflare Workers secrets
+
+# Main Zine Worker
+[env.zine]
+name = "zinate-main"
+usage_model = "bundled"
+workers_dev = true
+compatibility_date = "2023-05-18"
+
+# Secrets will be stored in Cloudflare Workers secrets
