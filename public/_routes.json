@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/_next/static/*",
+    "/static/*",
+    "/favicon.ico",
+    "/robots.txt",
+    "/sitemap.xml"
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/view/(.*)", "dest": "/view/[id]" }
+  ]
+}

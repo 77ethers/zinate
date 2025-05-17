@@ -37,3 +37,16 @@ workers_dev = true
 compatibility_date = "2023-05-18"
 
 # Secrets will be stored in Cloudflare Workers secrets
+
+# Share Zine Worker
+[env.share_zine]
+name = "zinate-share"
+usage_model = "bundled"
+workers_dev = true
+compatibility_date = "2023-05-18"
+
+# D1 database binding for stored zines
+[[env.share_zine.d1_databases]]
+binding = "DB"
+database_name = "zinate-shared-zines"
+database_id = "│"

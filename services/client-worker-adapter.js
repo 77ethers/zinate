@@ -12,7 +12,8 @@ class ClientWorkerAdapter {
       storyPlanner: process.env.NEXT_PUBLIC_STORY_PLANNER_WORKER_URL || 'https://zinate-story-planner.77ethers.workers.dev',
       contentGenerator: process.env.NEXT_PUBLIC_CONTENT_GENERATOR_WORKER_URL || 'https://zinate-content-generator.77ethers.workers.dev',
       imageGenerator: process.env.NEXT_PUBLIC_IMAGE_GENERATOR_WORKER_URL || 'https://zinate-image-generator.77ethers.workers.dev',
-      zine: process.env.NEXT_PUBLIC_ZINE_WORKER_URL || 'https://zinate-main.77ethers.workers.dev'
+      zine: process.env.NEXT_PUBLIC_ZINE_WORKER_URL || 'https://zinate-main.77ethers.workers.dev',
+      shareZine: process.env.NEXT_PUBLIC_SHARE_ZINE_WORKER_URL || 'https://zinate-share.77ethers.workers.dev'
     };
     
     // Flag to determine if we should use worker orchestration or client orchestration
@@ -360,6 +361,68 @@ class ClientWorkerAdapter {
       };
     }
   }
+
+  /**
+   * Share a zine using the share zine worker
+   * @param {Object} zineData - The zine data to share
+   * @returns {Promise<Object>} - The share result with ID and URL
+   */
+  async shareZine(zineData) {
+    try {
+      const response = await fetch(`${this.urls.shareZine}/share`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(zineData),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to share zine');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('[ClientWorkerAdapter] Error sharing zine:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Error connecting to share zine worker' 
+      };
+    }
+  }
+
+  /**
+   * Get a shared zine using the share zine worker
+   * @param {string} zineId - The ID of the shared zine
+   * @returns {Promise<Object>} - The shared zine data
+   */
+  async getSharedZine(zineId) {
+    try {
+      const response = await fetch(`${this.urls.shareZine}/share/${zineId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to retrieve shared zine');
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('[ClientWorkerAdapter] Error retrieving shared zine:', error);
+      return { 
+        success: false, 
+        error: error.message || 'Error connecting to share zine worker' 
+      };
+    }
+  }
 }
 
+
+
+// Export the class as default
 export default ClientWorkerAdapter;

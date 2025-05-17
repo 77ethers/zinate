@@ -1,0 +1,29 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--prefer-offline"
+  NEXT_PRIVATE_TARGET = "server"
+
+# Handle Next.js API routes
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/nextjs-api/:splat"
+  status = 200
+  force = true
+
+# Handle dynamic routes
+[[redirects]]
+  from = "/view/*"
+  to = "/.netlify/functions/nextjs"
+  status = 200
+  force = true
+
+# Handle all other pages (single page application)
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/nextjs"
+  status = 200

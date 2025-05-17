@@ -113,7 +113,9 @@ export default function useWorkerServices() {
       
       // Connect to the Server-Sent Events endpoint for progress
       const progressId = prompt.trim();
-      const evtSource = new EventSource(`/api/progress?id=${encodeURIComponent(progressId)}`);
+      // Check if we're in production (deployed) mode
+      const baseApiUrl = typeof window !== 'undefined' && window.location.hostname !== 'localhost' ? '/.netlify/functions/nextjs-api' : '/api';
+      const evtSource = new EventSource(`${baseApiUrl}/progress?id=${encodeURIComponent(progressId)}`);
       
       evtSource.onmessage = (event) => {
         const data = JSON.parse(event.data);
@@ -148,8 +150,8 @@ export default function useWorkerServices() {
       
       console.log('[Debug] generateZine response:', data);
       
-      // Call the Next.js API endpoint
-      const response = await fetch(`/api/generate?prompt=${encodeURIComponent(prompt)}`);
+      // Call the Next.js API endpoint with the appropriate base URL based on environment
+      const response = await fetch(`${baseApiUrl}/generate?prompt=${encodeURIComponent(prompt)}`);
       evtSource.close(); // Close the event source when the main request completes
       
       if (!response.ok) {

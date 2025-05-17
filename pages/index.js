@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import PromptInput from '../components/PromptInput';
 import FullscreenZineViewer from '../components/FullscreenZineViewer';
 import ZineCreationProgress from '../components/ZineCreationProgress';
+import ShareZineButton from '../components/ShareZineButton';
 import useWorkerServices from '../hooks/useWorkerServices';
 import styles from '../styles/Home.module.css'; // Import CSS Modules
 
@@ -192,6 +193,17 @@ export default function HomePage() {
           hasMore={hasMore}
           error={error}
         />
+        
+        {/* Share button for when zine is created */}
+        {zineItems.length > 0 && !isLoading && !error && (
+          <div className={styles.shareButtonWrapper}>
+            <ShareZineButton 
+              items={zineItems}
+              title={zineItems[0]?.title || 'My Mythic Zine'} 
+              prompt={currentPrompt}
+            />
+          </div>
+        )}
       </main>
 
       <footer className={styles.footer}>

@@ -1,12 +1,14 @@
 {
   "name": "zinate",
   "version": "1.0.0",
+  "type": "module",
   "main": "api-example.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "preview": "next start"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +16,7 @@
   "description": "",
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@netlify/next": "^1.4.9",
     "@runware/sdk-js": "^1.1.38",
     "dotenv": "^16.5.0",
     "framer-motion": "^12.12.1",

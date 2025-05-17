@@ -27,7 +27,29 @@ body::before {
   background-size: 400% 400%;
   animation: iridescent-shift 15s ease infinite;
   pointer-events: none; /* Allow clicks to pass through */
+  -webkit-touch-callout: none; /* Prevent callout on tap */
+  -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
   z-index: 1;
+  touch-action: manipulation; /* Optimize for touch devices */
+}
+
+/* Ensure form elements are interactive on mobile */
+input, button, textarea, select, a, [role="button"], [role="link"] {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Improve touch targets for mobile */
+@media (max-width: 768px) {
+  button, [role="button"], [type="submit"] {
+    min-height: 44px; /* Minimum touch target size */
+    min-width: 44px;
+  }
 }
 
 @keyframes iridescent-shift {

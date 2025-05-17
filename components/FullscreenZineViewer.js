@@ -1,6 +1,8 @@
 import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './FullscreenZineViewer.module.css';
+import ShareZineButton from './ShareZineButton';
+import ClientWorkerAdapter from '../services/client-worker-adapter';
 
 // Individual page component
 const FullscreenZinePage = ({ imageUrl, caption, index, isActive, totalPages, onZoomToggle, isZoomed }) => {
@@ -148,7 +150,7 @@ const FullscreenZinePage = ({ imageUrl, caption, index, isActive, totalPages, on
 };
 
 // Main Zine Viewer component
-const FullscreenZineViewer = ({ items, onLoadMore, isLoading, hasMore, error }) => {
+const FullscreenZineViewer = ({ items, onLoadMore, isLoading, hasMore, error, prompt, title }) => {
   const [activePageIndex, setActivePageIndex] = useState(0);
   const [isScrolling, setIsScrolling] = useState(false);
   const [scrollDirection, setScrollDirection] = useState(null);
@@ -158,6 +160,14 @@ const FullscreenZineViewer = ({ items, onLoadMore, isLoading, hasMore, error }) 
   const [showShortcutHelp, setShowShortcutHelp] = useState(false);
   const [showThumbnails, setShowThumbnails] = useState(false);
   const [zoomedPageIndex, setZoomedPageIndex] = useState(null);
+  const [isSharing, setIsSharing] = useState(false);
+  const [shareUrl, setShareUrl] = useState(null);
+  const [adapter] = useState(() => new ClientWorkerAdapter());
+  
+  // Handle zoom toggle for pages
+  const handleZoomToggle = useCallback((index) => {
+    setZoomedPageIndex(prevIndex => prevIndex === index ? null : index);
+  }, []);
   const observerRef = useRef(null);
   const pagesRef = useRef([]);
   const viewerRef = useRef(null);
@@ -366,8 +376,7 @@ const FullscreenZineViewer = ({ items, onLoadMore, isLoading, hasMore, error }) 
       if (e.key === 'Home') {
         e.preventDefault();
         if (items.length > 0) {
-          const firstPage = document.getElementById(`page-0`);
-          if (firstPage) firstPage.scrollIntoView({ behavior: 'smooth' });
+          goToPage(0);
         }
         return;
       }
@@ -376,8 +385,7 @@ const FullscreenZineViewer = ({ items, onLoadMore, isLoading, hasMore, error }) 
       if (e.key === 'End') {
         e.preventDefault();
         if (items.length > 0) {
-          const lastPage = document.getElementById(`page-${items.length - 1}`);
-          if (lastPage) lastPage.scrollIntoView({ behavior: 'smooth' });
+          goToPage(items.length - 1);
         }
         return;
       }
@@ -386,18 +394,18 @@ const FullscreenZineViewer = ({ items, onLoadMore, isLoading, hasMore, error }) 
       if ((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && !showThumbnails) {
         e.preventDefault();
         if (activePageIndex > 0) {
-          const prevPage = document.getElementById(`page-${activePageIndex - 1}`);
-          if (prevPage) prevPage.scrollIntoView({ behavior: 'smooth' });
+          goToPage(activePageIndex - 1);
         }
         return;
       }
 
-      // Right/Down arrow or Space - next page
-      if ((e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') && !showThumbnails) {
+      // Right/Down arrow - next page
+      if ((e.key === 'ArrowRight' || e.key === 'ArrowDown') && !showThumbnails) {
         e.preventDefault();
         if (activePageIndex < items.length - 1) {
-          const nextPage = document.getElementById(`page-${activePageIndex + 1}`);
-          if (nextPage) nextPage.scrollIntoView({ behavior: 'smooth' });
+          goToPage(activePageIndex + 1);
+        } else if (hasMore && !isLoading) {
+          onLoadMore();
         }
         return;
       }
@@ -405,27 +413,19 @@ const FullscreenZineViewer = ({ items, onLoadMore, isLoading, hasMore, error }) 
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activePageIndex, items.length, zoomedPageIndex, showShortcutHelp, showThumbnails]);
-  
+  }, [activePageIndex, items.length, zoomedPageIndex, showShortcutHelp, showThumbnails, hasMore, isLoading, onLoadMore, items]);
+
   // Handle page navigation
   const goToPage = (index) => {
     if (index >= 0 && index < items.length) {
       const page = document.getElementById(`page-${index}`);
-      if (page) page.scrollIntoView({ behavior: 'smooth' });
-      setShowThumbnails(false); // Close thumbnails after navigation
-    }
-  };
-  
-  // Handle zooming in/out
-  const handleZoomToggle = (index) => {
-    if (zoomedPageIndex === index) {
-      setZoomedPageIndex(null); // Unzoom if clicking on already zoomed image
-    } else {
-      setZoomedPageIndex(index); // Zoom in on clicked image
+      if (page) {
+        page.scrollIntoView({ behavior: 'smooth' });
+        setActivePageIndex(index);
+      }
     }
   };
 
-  // Calculate progress percentage
   const progressPercentage = items.length > 1 ? (activePageIndex / (items.length - 1)) * 100 : 0;
 
   return (

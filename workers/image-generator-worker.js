@@ -73,7 +73,7 @@ export default {
         const enhancedPrompt = `Mythic zine art style, evocative, cinematic lighting, dramatic scene: ${prompt}`;
         
         // Race between Runware generation and timeout
-        const runwarePromise = runware.requestImages({
+        const runwarePromise = runware.requestImages([{
           taskType: "imageInference",
           width: 1024,
           height: 1024,
@@ -82,11 +82,11 @@ export default {
           steps: 28,
           CFGScale: 3.5,
           scheduler: "FlowMatchEulerDiscreteScheduler",
-          outputType: "URL",
+          outputType: ["URL"],
           includeCost: true,
           positivePrompt: enhancedPrompt,
           model: "runware:101@1"
-        });
+        }]);
         
         const results = await Promise.race([
           runwarePromise,

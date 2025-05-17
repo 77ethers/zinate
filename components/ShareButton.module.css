@@ -1,0 +1,135 @@
+.shareContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 15px 0;
+}
+
+.shareButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(99, 102, 241, 0.25);
+}
+
+.shareButton:hover {
+  background-color: #4f46e5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 10px rgba(79, 70, 229, 0.3);
+}
+
+.shareButton:disabled {
+  background-color: #a5a6f6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.shareIcon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+
+.loadingSpinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid white;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.shareUrlContainer {
+  width: 100%;
+  max-width: 400px;
+  position: relative;
+}
+
+.shareUrlInput {
+  display: flex;
+  align-items: center;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.shareUrlText {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  color: #4b5563;
+  margin-right: 8px;
+}
+
+.copyButton {
+  background: none;
+  border: none;
+  color: #6366f1;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.copyButton:hover {
+  background-color: rgba(99, 102, 241, 0.1);
+}
+
+.copyIcon, .checkIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.checkIcon {
+  color: #10b981;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1f2937;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 8px;
+  height: 8px;
+  background-color: #1f2937;
+}

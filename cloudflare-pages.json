@@ -1,0 +1,23 @@
+{
+  "build": {
+    "command": "npm run build",
+    "publish": ".next",
+    "node_compat": true,
+    "env": {
+      "NEXT_TELEMETRY_DISABLED": "1"
+    }
+  },
+  "deployment_configs": {
+    "production": {
+      "env_vars": {
+        "NODE_VERSION": "20",
+        "NPM_FLAGS": "--prefer-offline",
+        "NEXT_PUBLIC_USE_DIRECT_WORKER": "true"
+      }
+    }
+  },
+  "routes": [
+    { "pattern": "/view/*", "dest": "/view/[id].html", "status": 200 },
+    { "pattern": "/*", "dest": "/404.html", "status": 404 }
+  ]
+}
